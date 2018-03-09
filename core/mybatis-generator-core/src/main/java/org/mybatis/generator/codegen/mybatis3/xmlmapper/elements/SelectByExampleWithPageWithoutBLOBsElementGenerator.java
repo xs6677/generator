@@ -74,7 +74,7 @@ public class SelectByExampleWithPageWithoutBLOBsElementGenerator extends
         answer.addElement(ifElement);
         
         ifElement = new XmlElement("if"); //$NON-NLS-1$
-        ifElement.addAttribute(new Attribute("test", "page = true")); //$NON-NLS-1$ //$NON-NLS-2$
+        ifElement.addAttribute(new Attribute("test", "page")); //$NON-NLS-1$ //$NON-NLS-2$
         ifElement.addElement(new TextElement("limit ${offset}, ${count}")); //$NON-NLS-1$
         answer.addElement(ifElement);
 

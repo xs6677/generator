@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2016 the original author or authors.
+ *    Copyright 2006-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -35,6 +35,8 @@ import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.InsertSelective
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.ResultMapWithBLOBsElementGenerator;
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.ResultMapWithoutBLOBsElementGenerator;
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.SelectByExampleWithBLOBsElementGenerator;
+import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.SelectByExampleWithPageWithBLOBsElementGenerator;
+import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.SelectByExampleWithPageWithoutBLOBsElementGenerator;
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.SelectByExampleWithoutBLOBsElementGenerator;
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.SelectByPrimaryKeyElementGenerator;
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.UpdateByExampleSelectiveElementGenerator;
@@ -43,6 +45,7 @@ import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.UpdateByExample
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.UpdateByPrimaryKeySelectiveElementGenerator;
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.UpdateByPrimaryKeyWithBLOBsElementGenerator;
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.UpdateByPrimaryKeyWithoutBLOBsElementGenerator;
+import org.mybatis.generator.config.TableConfiguration;
 
 /**
  * 
@@ -139,14 +142,26 @@ public class XMLMapperGenerator extends AbstractXmlGenerator {
     protected void addSelectByExampleWithoutBLOBsElement(
             XmlElement parentElement) {
         if (introspectedTable.getRules().generateSelectByExampleWithoutBLOBs()) {
-            AbstractXmlElementGenerator elementGenerator = new SelectByExampleWithoutBLOBsElementGenerator();
+        	TableConfiguration config = introspectedTable.getTableConfiguration();
+        	AbstractXmlElementGenerator elementGenerator;
+        	if (config.isLimit()) {
+        		elementGenerator = new SelectByExampleWithPageWithoutBLOBsElementGenerator();
+        	} else {
+        		elementGenerator = new SelectByExampleWithoutBLOBsElementGenerator();
+        	}
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }
 
     protected void addSelectByExampleWithBLOBsElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateSelectByExampleWithBLOBs()) {
-            AbstractXmlElementGenerator elementGenerator = new SelectByExampleWithBLOBsElementGenerator();
+        	TableConfiguration config = introspectedTable.getTableConfiguration();
+        	AbstractXmlElementGenerator elementGenerator;
+        	if (config.isLimit()) {
+        		elementGenerator = new SelectByExampleWithPageWithBLOBsElementGenerator();
+        	} else {
+        		elementGenerator = new SelectByExampleWithBLOBsElementGenerator();
+        	}
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }

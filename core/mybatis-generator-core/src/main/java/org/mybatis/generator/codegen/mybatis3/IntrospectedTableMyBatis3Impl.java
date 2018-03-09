@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2017 the original author or authors.
+ *    Copyright 2006-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,10 +33,12 @@ import org.mybatis.generator.codegen.mybatis3.javamapper.JavaMapperGenerator;
 import org.mybatis.generator.codegen.mybatis3.javamapper.MixedClientGenerator;
 import org.mybatis.generator.codegen.mybatis3.model.BaseRecordGenerator;
 import org.mybatis.generator.codegen.mybatis3.model.ExampleGenerator;
+import org.mybatis.generator.codegen.mybatis3.model.ExampleWithPageGenerator;
 import org.mybatis.generator.codegen.mybatis3.model.PrimaryKeyGenerator;
 import org.mybatis.generator.codegen.mybatis3.model.RecordWithBLOBsGenerator;
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.XMLMapperGenerator;
 import org.mybatis.generator.config.PropertyRegistry;
+import org.mybatis.generator.config.TableConfiguration;
 import org.mybatis.generator.internal.ObjectFactory;
 
 /**
@@ -127,7 +129,13 @@ public class IntrospectedTableMyBatis3Impl extends IntrospectedTable {
     protected void calculateJavaModelGenerators(List<String> warnings,
             ProgressCallback progressCallback) {
         if (getRules().generateExampleClass()) {
-            AbstractJavaGenerator javaGenerator = new ExampleGenerator();
+        	TableConfiguration config = getTableConfiguration();
+        	AbstractJavaGenerator javaGenerator;
+        	if (config.isLimit()) {
+        		javaGenerator = new ExampleWithPageGenerator();
+        	} else {
+        		javaGenerator = new ExampleGenerator();
+        	}
             initializeAbstractGenerator(javaGenerator, warnings,
                     progressCallback);
             javaModelGenerators.add(javaGenerator);
